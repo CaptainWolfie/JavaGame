@@ -1,4 +1,4 @@
-package MenuState;
+package GameState;
 
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
@@ -33,15 +33,17 @@ public class Start implements Runnable {
 		start(); // creates the thread
 	}
 	
-	
+	World world = new World();
+
 	// initialize the variables
 	private void init() {
 		try {
-			Music.play("MenuMusic.mp3");
+			Music.play("FirstDay.mp3");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		screen = new Screen(TITLE, WIDTH, HEIGHT);
+		world.init("");
 	}
 	
 	// update the variables
@@ -60,7 +62,7 @@ public class Start implements Runnable {
 		g = bs.getDrawGraphics(); // create graphics
 		g.clearRect(0, 0, WIDTH, HEIGHT); // clear screen
 		// start drawing
-		
+		world.render(g);
 		// stop drawing
 		bs.show(); // show
 		g.dispose(); // destroy

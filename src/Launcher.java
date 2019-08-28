@@ -1,4 +1,4 @@
-import MenuState.Start;
+import GameState.Start;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
