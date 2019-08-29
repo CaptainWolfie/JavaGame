@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.io.FileNotFoundException;
 
+import Utils.Assets;
 import Utils.Music;
 import Utils.Screen;
 
@@ -37,13 +38,17 @@ public class Start implements Runnable {
 
 	// initialize the variables
 	private void init() {
+		/*
+		 * Uncomment to play music
+		 * 
 		try {
 			Music.play("FirstDay.mp3");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
+		}*/
+		Assets.init();
 		screen = new Screen(TITLE, WIDTH, HEIGHT);
-		world.init("");
+		world.init("src/Maps/Map.txt");
 	}
 	
 	// update the variables

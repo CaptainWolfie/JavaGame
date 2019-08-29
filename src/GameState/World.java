@@ -1,20 +1,20 @@
 package GameState;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
+import GameState.Tiles.Tile;
 import Utils.FileReader;
 
 public class World {
 	
 	private int[][] blocks;
+	private int width, height;
 	
 	public void init(String path) {
 		FileReader reader = new FileReader();
-		String[] elements = reader.readFile("src/Maps/Map.txt").split("\\s+"); // separate all file's elements
-		int width = Integer.valueOf(elements[0]); // get how many tiles will be horizontal
-		int height = Integer.valueOf(elements[1]); // get how many tils will be vertical
-
+		String[] elements = reader.readFile(path).split("\\s+"); // separate all file's elements
+		width = Integer.valueOf(elements[0]); // get how many tiles will be horizontal
+		height = Integer.valueOf(elements[1]); // get how many tils will be vertical
 		
 		blocks = new int[width][height]; // initializing the array
 		for (int y = 0; y < height; y++) { // for-y-loop
@@ -26,15 +26,23 @@ public class World {
 	
 	
 	public void render(Graphics g) {
-		for (int y = 0; y < 5; y++) {
-			for (int x = 0; x < 5; x++) {
-				if (blocks[x][y] == 0)
-					g.setColor(Color.blue);
-				else
-					g.setColor(Color.white);
-				g.fillRect(x*50, y*50, 50, 50);
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				getTile(x,y).render(g, x * Tile.getWidth(), y * Tile.getHeight());
 			}
 		}
+	}
+	
+	
+	public Tile getTile(int x, int y) {
+		if (x < 0 || x > width || y < 0 || y > height) // if index is out of bounds
+			return Tile.grass;
+		
+		Tile tile = Tile.tiles[blocks[x][y]];
+		if (tile == null)
+			return Tile.grass;
+		
+		return tile;
 	}
 
 }
