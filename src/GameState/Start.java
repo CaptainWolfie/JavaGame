@@ -1,11 +1,10 @@
 package GameState;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
-import java.io.FileNotFoundException;
 
 import Utils.Assets;
-import Utils.Music;
 import Utils.Screen;
 
 public class Start implements Runnable {
@@ -34,7 +33,7 @@ public class Start implements Runnable {
 		start(); // creates the thread
 	}
 	
-	World world = new World();
+	World world;
 
 	// initialize the variables
 	private void init() {
@@ -48,12 +47,14 @@ public class Start implements Runnable {
 		}*/
 		Assets.init();
 		screen = new Screen(TITLE, WIDTH, HEIGHT);
+		world = new World(screen.getFrame());
 		world.init("src/Maps/Map.txt");
 	}
 	
 	// update the variables
 	private void update() {
-		
+		if (screen.getKeyboard().pressed[KeyEvent.VK_A])
+			System.out.println("hi");
 	}
 	
 	// render the graphics on the screen

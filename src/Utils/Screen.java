@@ -2,8 +2,13 @@ package Utils;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+
+import Input.Keyboard;
 
 public class Screen {
 	
@@ -13,11 +18,12 @@ public class Screen {
 	
 	private JFrame frame;
 	
+	private Keyboard keyboard = new Keyboard();
+	
 	public Screen(String TITLE, int WIDTH, int HEIGHT) {
 		this.WIDTH = WIDTH;
 		this.HEIGHT = HEIGHT;
 		createFrame(TITLE); // create the frame and canvas
-		
 	}
 	
 	private void createFrame(String TITLE) {
@@ -26,6 +32,8 @@ public class Screen {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
 		frame.setLocationRelativeTo(null);
+		frame.addKeyListener(keyboard);
+		setCursor();
 		frame.setVisible(true);
 		
 		createCanvas();
@@ -38,16 +46,22 @@ public class Screen {
 		canvas.setPreferredSize(size);
 		canvas.setMinimumSize(size);
 		canvas.setMaximumSize(size);
-		
+		canvas.addKeyListener(keyboard);
 		frame.add(canvas);
 	}
 	
+	private void setCursor() {
+		frame.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+				new ImageIcon("res/textures/cursor.png").getImage(),
+				new Point(0,0),"custom cursor"));
+	}
+	
 	public int getWidth() {
-		return WIDTH;
+		return frame.getWidth();
 	}
 	
 	public int getHeight() {
-		return HEIGHT;
+		return frame.getHeight();
 	}
 	
 	public JFrame getFrame() {
@@ -56,6 +70,10 @@ public class Screen {
 	
 	public Canvas getCanvas() {
 		return canvas;
+	}
+	
+	public Keyboard getKeyboard() {
+		return keyboard;
 	}
 
 }
