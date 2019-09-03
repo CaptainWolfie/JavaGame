@@ -26,12 +26,31 @@ public class Assets {
 		sheet = new SpriteSheet(ImageLoader.loadImage("/textures/png/walking.png"));
 		width = 24;
 		height = 46;
-		images.add(sheet.crop(0, 0, width, height));
+		
+		images.add(sheet.crop(0, 0, width, height)); // first
 		dimensions.add(new Dimension(width, height));
+		
 		width = 24;
-		images.add(sheet.crop(26, 0, width, height));
+		
+		images.add(sheet.crop(26, 0, width, height)); // second
 		dimensions.add(new Dimension(width, height));
-		images.add(sheet.crop(52, 0, width, height));
+		
+		images.add(sheet.crop(52, 0, width, height)); // third
+		dimensions.add(new Dimension(width, height));
+		
+		images.add(sheet.crop(78, 0, width, height)); // fourth
+		dimensions.add(new Dimension(width, height));
+	
+		images.add(sheet.crop(104, 0, width, height)); // fifth
+		dimensions.add(new Dimension(width, height));
+		
+		images.add(sheet.crop(130, 0, width, height)); // sixth
+		dimensions.add(new Dimension(width, height));
+		
+		images.add(sheet.crop(156, 0, width, height)); // seventh
+		dimensions.add(new Dimension(width, height));
+		
+		images.add(sheet.crop(182, 0, width, height)); // eight
 		dimensions.add(new Dimension(width, height));
 		
 		walk.put(images, dimensions);

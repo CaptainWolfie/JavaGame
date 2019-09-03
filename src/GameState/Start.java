@@ -1,11 +1,12 @@
 package GameState;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
+import java.io.FileNotFoundException;
 
 import GameState.Entities.Player;
 import Utils.Assets;
+import Utils.Music;
 import Utils.Screen;
 
 public class Start implements Runnable {
@@ -40,26 +41,21 @@ public class Start implements Runnable {
 	
 	// initialize the variables
 	private void init() {
-		/*
-		 * Uncomment to play music
-		 * 
 		try {
 			Music.play("FirstDay.mp3");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}*/
+		}
 		Assets.init();
-		player = new Player(0, 0, 22, 32);
 		screen = new Screen(TITLE, WIDTH, HEIGHT);
+		player = new Player(screen, 0, 0, 22, 32);
 		world = new World(screen.getFrame());
 		world.init("src/Maps/Map.txt");
 	}
 	
 	// update the variables
-	private void update() {
-		if (screen.getKeyboard().pressed[KeyEvent.VK_A])
-			System.out.println("hi");
-		player.update();
+	private void update(double latency) {
+		player.update(latency);
 	}
 	
 	// render the graphics on the screen
@@ -106,7 +102,7 @@ public class Start implements Runnable {
 			lastTime = now;
 			
 			if (delta >= 1) {
-				update();
+				update(1/delta);
 				render();
 				ticks+=delta;
 				delta = 0;
