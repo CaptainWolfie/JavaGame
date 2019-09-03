@@ -20,12 +20,21 @@ public class Player {
 		RIGHT
 	}
 	
+	private enum State {
+		WALKING,
+		RUNNING,
+		STILL
+	}
+	
 	private Keys lastKey = Keys.RIGHT;
+	private State imagesState = State.STILL;
 
 	private List<BufferedImage> images = new ArrayList<>();
 	private List<Dimension> dimensions = new ArrayList<>();
 	private Animation animation;
 	private Keyboard keyboard;
+	
+	private int walkSpeed = 4, runSpeed = 6, imagesWalkSpeed = 5, imagesRunSpeed = 3;
 	
 	@SuppressWarnings("unused")
 	private int x, y, width, height, speed = 4;
@@ -40,13 +49,13 @@ public class Player {
 	}
 	
 	private void init() {
-		for (List<BufferedImage> i : Assets.walk.keySet()) {
+		for (List<BufferedImage> i : Assets.still.keySet()) {
 			images = i;
 		}
-		for (List<Dimension> i : Assets.walk.values()) {
+		for (List<Dimension> i : Assets.still.values()) {
 			dimensions = i;
 		}
-		animation = new Animation(images, dimensions, 5, 2);
+		animation = new Animation(images, dimensions, (imagesState == State.RUNNING) ? imagesRunSpeed : imagesWalkSpeed, 2);
 	}
 	
 	public void render(Graphics g) {
@@ -59,10 +68,15 @@ public class Player {
 		/*
 		 * If both buttons are pressed dont do anything
 		 */
-		if (!(keyboard.pressed[KeyEvent.VK_D] && keyboard.pressed[KeyEvent.VK_A])) {
+		if (!(keyboard.pressed[KeyEvent.VK_D] && keyboard.pressed[KeyEvent.VK_A]) && (keyboard.pressed[KeyEvent.VK_D]
+				|| keyboard.pressed[KeyEvent.VK_A]) || keyboard.pressed[KeyEvent.VK_SHIFT]) {
 			/*
-			 * Only one of the buttons is pressed
+			 * LEFT or RIGHT or SHIFT are pressed but not both left and right
 			 */
+			if (keyboard.pressed[KeyEvent.VK_SHIFT])
+				changeState(State.RUNNING);
+			else
+				changeState(State.WALKING);
 			if (keyboard.pressed[KeyEvent.VK_D]) {
 				lastKey = Keys.RIGHT;
 				x+=speed;
@@ -71,12 +85,50 @@ public class Player {
 				lastKey = Keys.LEFT;
 				x-=speed;
 			}
-		}
+		} else
+			changeState(State.STILL);
 		if (keyboard.pressed[KeyEvent.VK_W])
-			y-=speed * latency;
+			y-=speed;
 		if (keyboard.pressed[KeyEvent.VK_S])
-			y+=speed * latency;
+			y+=speed;
 	
 		animation.update();
+	}
+	
+	private void changeState(State state) {
+		if (imagesState == state)
+			return;
+		
+		else {
+			imagesState = state;
+			if (state == State.STILL) {
+				for (List<BufferedImage> i : Assets.still.keySet()) {
+					images = i;
+				}
+				for (List<Dimension> i : Assets.still.values()) {
+					dimensions = i;
+				}
+				animation.setImages(images, dimensions);
+				speed = walkSpeed;
+			} else if (state == State.RUNNING) {
+				for (List<BufferedImage> i : Assets.walk.keySet()) {
+					images = i;
+				}
+				for (List<Dimension> i : Assets.walk.values()) {
+					dimensions = i;
+				}
+				animation.setImages(images, dimensions);
+				speed = runSpeed;
+			} else {
+				for (List<BufferedImage> i : Assets.walk.keySet()) {
+					images = i;
+				}
+				for (List<Dimension> i : Assets.walk.values()) {
+					dimensions = i;
+				}
+				animation.setImages(images, dimensions);
+				speed = walkSpeed;
+			}
+		}
 	}
 }

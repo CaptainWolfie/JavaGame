@@ -14,14 +14,15 @@ public class Assets {
 	
 	public static BufferedImage grass;
 	public static Map<List<BufferedImage>, List<Dimension>> walk = new HashMap<>();
-		
+	public static Map<List<BufferedImage>, List<Dimension>> still = new HashMap<>();
+	
 	public static void init() {		
 		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/Tiles1.png"));
 		
 		grass = sheet.crop(0, height, width, height);
 		
 		List<BufferedImage> images = new ArrayList<>();
-		List<Dimension> dimensions = new ArrayList<>();		
+		List<Dimension> dimensions = new ArrayList<>();
 
 		sheet = new SpriteSheet(ImageLoader.loadImage("/textures/png/walking.png"));
 		width = 24;
@@ -29,8 +30,6 @@ public class Assets {
 		
 		images.add(sheet.crop(0, 0, width, height)); // first
 		dimensions.add(new Dimension(width, height));
-		
-		width = 24;
 		
 		images.add(sheet.crop(26, 0, width, height)); // second
 		dimensions.add(new Dimension(width, height));
@@ -54,5 +53,14 @@ public class Assets {
 		dimensions.add(new Dimension(width, height));
 		
 		walk.put(images, dimensions);
+		
+		images = new ArrayList<>();
+		dimensions = new ArrayList<>();
+		sheet = new SpriteSheet(ImageLoader.loadImage("/textures/png/still.png"));
+		
+		images.add(sheet.crop(0, 0, width, height)); // first
+		dimensions.add(new Dimension(width, height));
+		
+		still.put(images, dimensions);
 	}
 }

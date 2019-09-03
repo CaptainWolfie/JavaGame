@@ -24,6 +24,8 @@ public class Animation {
 		if (++frame == delay) { // change images
 			frame = 0;
 			image+=(image + 1 == images.size()) ? -image + replay : 1;
+			if (image >= images.size())
+				image = 0;
 		}
 	}
 	
@@ -45,5 +47,11 @@ public class Animation {
 			g.drawImage(images.get(image), x + width, y, -width, height, null); // draw backwards
 		else
 			g.drawImage(images.get(image), x, y, width, height, null); // draw normal
+	}
+	
+	public void setImages(List<BufferedImage> images, List<Dimension> dimensions) {
+		this.dimensions = dimensions;
+		this.images = images;
+		image = 0;
 	}
 }
