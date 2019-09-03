@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 
+import GameState.Entities.Player;
 import Utils.Assets;
 import Utils.Screen;
 
@@ -14,6 +15,10 @@ public class Start implements Runnable {
 	private boolean running;
 	
 	private BufferStrategy bs;
+	
+	private Player player;
+	
+	private World world;
 	
 	private Graphics g;
 	
@@ -33,8 +38,6 @@ public class Start implements Runnable {
 		start(); // creates the thread
 	}
 	
-	World world;
-
 	// initialize the variables
 	private void init() {
 		/*
@@ -46,6 +49,7 @@ public class Start implements Runnable {
 			e.printStackTrace();
 		}*/
 		Assets.init();
+		player = new Player(0, 0, 22, 32);
 		screen = new Screen(TITLE, WIDTH, HEIGHT);
 		world = new World(screen.getFrame());
 		world.init("src/Maps/Map.txt");
@@ -55,6 +59,7 @@ public class Start implements Runnable {
 	private void update() {
 		if (screen.getKeyboard().pressed[KeyEvent.VK_A])
 			System.out.println("hi");
+		player.update();
 	}
 	
 	// render the graphics on the screen
@@ -69,6 +74,7 @@ public class Start implements Runnable {
 		g.clearRect(0, 0, WIDTH, HEIGHT); // clear screen
 		// start drawing
 		world.render(g);
+		player.render(g);
 		// stop drawing
 		bs.show(); // show
 		g.dispose(); // destroy
