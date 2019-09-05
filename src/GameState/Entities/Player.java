@@ -187,7 +187,7 @@ public class Player {
 			int playerFinalY = (int)(getWorldY() * Tile.getHeight() + kinetic/dynamic)/Tile.getHeight();
 			// if any block found solid between player Y and playerFinalY
 			boolean blockFound = false;
-			for (int i = 1; i <= playerFinalY - getWorldY(); i++) {
+			for (int i = 1; i <= playerFinalY - getWorldY() +1; i++) {
 				// check if a tile between player and final player y is solid
 				if (world.getTile(getWorldX(), getWorldY()+2+i).isSolid()) {
 					y = (getWorldY()+i) * Tile.getHeight(); // here we dont have +2 because the Y is on the top of player's head and this time we dont check for any blocks under his legs
@@ -212,6 +212,9 @@ public class Player {
 	private void jump() {
 		if (kinetic <= 0) {
 			jumping = false;
+			kinetic = 20;
+			dynamic = 11.8f;
+			falling = true;
 			return;
 		}
 		kinetic-=2;
