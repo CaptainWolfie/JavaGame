@@ -96,6 +96,16 @@ public class Player {
 			}
 		} else
 			changeState(State.STILL);
+
+		if (keyboard.pressed[KeyEvent.VK_W] && !jumping && !falling) {
+			jumping = true;
+			kinetic = 40;
+			dynamic = 2;
+		}
+		
+		
+		if (jumping)
+			jump();
 		
 		updateGravity();
 		
@@ -138,30 +148,24 @@ public class Player {
 			}
 		}
 	}
-	
-	public int getWorldX() {
-		return x / Tile.getWidth();
-	}
-	
-	public int getWorldY() {
-		return y / Tile.getHeight();
-	}
-	
+
 	private void updateGravity() {
 		// check for falling
-		
 		try {
 			/*
 		  	 * Check if player is not jumping and has no tile under their legs
 		 	 */
 			if (!falling && !jumping && !world.getTile(getWorldX(), getWorldY() + 2).isSolid()) // getWorldY() + 2 because the y is on the top of player's head
 				falling = true;
-		
+			
 			/*
 		 	 * check if player has something under their legs
 		 	 */
 			if (world.getTile(getWorldX(), getWorldY() + 2).isSolid()) // getWorldY() + 2 because the y is on the top of player's head
 				falling = false;
+			
+			if (getWorldY() < 0 && !jumping)
+				falling = true;
 		} catch (NullPointerException | IndexOutOfBoundsException e) {
 			/*
 			 * Tile is null
@@ -173,7 +177,7 @@ public class Player {
 		 * if player is falling change their position
 		 */
 		if (falling && !jumping) {
-			kinetic+=2.5;
+			kinetic+=40;
 			if (kinetic >= 80)
 				kinetic = 79;
 			else
@@ -199,10 +203,30 @@ public class Player {
 		/*
 		 * Change player's energies
 		 */
-		if (!falling && !jumping && (dynamic != 0 || kinetic != 30)) {
+		if (!falling && !jumping && (dynamic != 10 || kinetic != 20)) {
 			dynamic = 10;
 			kinetic = 20;
 		}
 	}
+	
+	private void jump() {
+		if (kinetic <= 0) {
+			jumping = false;
+			return;
+		}
+		kinetic-=2;
+		dynamic+=.3;
+		y-= kinetic/dynamic;
+	}
+	
+	
+	public int getWorldX() {
+		return x / Tile.getWidth();
+	}
+	
+	public int getWorldY() {
+		return y / Tile.getHeight();
+	}
+	
 	
 }
