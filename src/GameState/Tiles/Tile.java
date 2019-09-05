@@ -6,9 +6,17 @@ import java.awt.image.BufferedImage;
 import Utils.Assets;
 
 public class Tile {
-	
+
+	/*
+	 * Tiles list
+	 */
 	public static Tile[] tiles = new Tile[256];
-	public static Tile grass = new Tile(Assets.grass, 0, 10, true);
+	
+	/*
+	 * List of tile objects
+	 */
+	public static Tile air = new Tile(null, 0, -1, false);
+	public static Tile grass = new Tile(Assets.grass, 1, 10, true);
 	
 	
 	private BufferedImage image;
@@ -16,6 +24,12 @@ public class Tile {
 	private int health, id;
 	private static int WIDTH = 16, HEIGHT = 16;
 	
+	/*
+	 * @Args image: Tile's rendered image
+	 * @Args id: Tile's ID in map file (ex: 1)
+	 * @Args health: Tile's health (leave -1 for unbreakable)
+	 * @Args isSolid: If player can touch it
+	 */
 	public Tile(BufferedImage image, int id, int health, boolean isSolid) {
 		this.image = image;
 		this.isSolid = isSolid;
@@ -25,6 +39,9 @@ public class Tile {
 		tiles[id] = this;
 	}
 	
+	/*
+	 * Render this tile only
+	 */
 	public void render(Graphics g, int x, int y) {
 		g.drawImage(image, x, y, WIDTH, HEIGHT, null);
 	}
@@ -47,5 +64,9 @@ public class Tile {
 	
 	public static int getHeight() {
 		return HEIGHT;
+	}
+	
+	public boolean isUnbreakable() {
+		return (getHealth() == -1) ? true : false;
 	}
 }

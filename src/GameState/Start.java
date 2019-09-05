@@ -48,9 +48,9 @@ public class Start implements Runnable {
 		}
 		Assets.init();
 		screen = new Screen(TITLE, WIDTH, HEIGHT);
-		player = new Player(screen, 0, 0, 22, 32);
 		world = new World(screen.getFrame());
 		world.init("src/Maps/Map.txt");
+		player = new Player(screen, 0, 0, 22, 32, world);
 	}
 	
 	// update the variables
