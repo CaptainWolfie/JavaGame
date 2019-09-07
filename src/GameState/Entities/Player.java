@@ -40,7 +40,7 @@ public class Player {
 	
 	// gravity variables
 	private boolean falling = false, jumping = false;
-	private float kinetic = 20, dynamic = 10;
+	private float kinetic = 20, dynamic = 11.4f;
 	// player variables
 	private int walkSpeed = 4, runSpeed = 6, imagesWalkSpeed = 5, imagesRunSpeed = 3;
 	
@@ -88,18 +88,18 @@ public class Player {
 				changeState(State.WALKING);
 			if (keyboard.pressed[KeyEvent.VK_D]) {
 				lastKey = Keys.RIGHT;
-				x+=speed;
+				moveRight(speed);
 			}
 			if (keyboard.pressed[KeyEvent.VK_A]) {
 				lastKey = Keys.LEFT;
-				x-=speed;
+				moveLeft(speed);
 			}
 		} else
 			changeState(State.STILL);
 
 		if (keyboard.pressed[KeyEvent.VK_W] && !jumping && !falling) {
 			jumping = true;
-			kinetic = 40;
+			kinetic = 35;
 			dynamic = 2;
 		}
 		
@@ -152,16 +152,22 @@ public class Player {
 	private void updateGravity() {
 		// check for falling
 		try {
+			boolean tileFound = false;
+			for (int i = 8; i < width - 7; i++) {
+				if (world.getTile((x + i) / Tile.getWidth(), getWorldY() + 2).isSolid()) {
+					tileFound = true;
+				}
+			}
 			/*
 		  	 * Check if player is not jumping and has no tile under their legs
 		 	 */
-			if (!falling && !jumping && !world.getTile(getWorldX(), getWorldY() + 2).isSolid()) // getWorldY() + 2 because the y is on the top of player's head
+			if (!falling && !jumping && !tileFound) // getWorldY() + 2 because the y is on the top of player's head
 				falling = true;
 			
 			/*
 		 	 * check if player has something under their legs
 		 	 */
-			if (world.getTile(getWorldX(), getWorldY() + 2).isSolid()) // getWorldY() + 2 because the y is on the top of player's head
+			if (tileFound)
 				falling = false;
 			
 			if (getWorldY() < 0 && !jumping)
@@ -177,22 +183,25 @@ public class Player {
 		 * if player is falling change their position
 		 */
 		if (falling && !jumping) {
-			kinetic+=40;
+			kinetic+=3;
 			if (kinetic >= 80)
 				kinetic = 79;
 			else
-				dynamic-=.3;
+				dynamic-=.2;
 			
 			// player's Y if we change their position from here
 			int playerFinalY = (int)(getWorldY() * Tile.getHeight() + kinetic/dynamic)/Tile.getHeight();
 			// if any block found solid between player Y and playerFinalY
 			boolean blockFound = false;
-			for (int i = 1; i <= playerFinalY - getWorldY() +1; i++) {
-				// check if a tile between player and final player y is solid
-				if (world.getTile(getWorldX(), getWorldY()+2+i).isSolid()) {
-					y = (getWorldY()+i) * Tile.getHeight(); // here we dont have +2 because the Y is on the top of player's head and this time we dont check for any blocks under his legs
-					falling = false;
-					blockFound = true;
+			// check for each x of player asset after the 8th x and 7 before
+			for (int x1 = 9; x1 <= width - 7; x1++) {
+				for (int y1 = 1; y1 <= playerFinalY - getWorldY() +1; y1++) {
+					// check if a tile between player and final player y is solid
+					if (world.getTile((x+x1)/Tile.getWidth(), (y + speed) / Tile.getHeight() + 2 +y1).isSolid()) {
+						y = (getWorldY()+y1) * Tile.getHeight(); // here we dont have +2 because the Y is on the top of player's head and this time we dont check for any blocks under his legs
+						falling = false;
+						blockFound = true;
+					}
 				}
 			}
 			if (!blockFound)
@@ -203,17 +212,41 @@ public class Player {
 		/*
 		 * Change player's energies
 		 */
-		if (!falling && !jumping && (dynamic != 10 || kinetic != 20)) {
-			dynamic = 10;
+		if (!falling && !jumping && (dynamic != 11.4 || kinetic != 20)) {
 			kinetic = 20;
+			dynamic = 11.4f;
 		}
+	}
+	
+	private void moveRight(int speed) {
+		boolean tileFound = false;
+		for (int i = 0; i < height; i++) {
+			if (world.getTile((x - 7 + width + speed) / Tile.getWidth(), (y + i) / Tile.getWidth()) != Tile.air)
+				tileFound = true;
+		}
+		if (tileFound)
+			return;
+		
+		x+=speed;
+	}
+	
+	private void moveLeft(int speed) {
+		boolean tileFound = false;
+		for (int i = 0; i < height; i++) {
+			if (world.getTile((x + 8 - speed) / Tile.getWidth(), (y + i) / Tile.getWidth()) != Tile.air)
+				tileFound = true;
+		}
+		if (tileFound)
+			return;
+		
+		x-=speed;
 	}
 	
 	private void jump() {
 		if (kinetic <= 0) {
 			jumping = false;
 			kinetic = 20;
-			dynamic = 11.8f;
+			dynamic = 11.4f;
 			falling = true;
 			return;
 		}

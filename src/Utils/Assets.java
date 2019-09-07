@@ -12,15 +12,32 @@ public class Assets {
 	private static int width = 16;
 	private static int height = 16;
 	
-	public static BufferedImage grass;
+	public static BufferedImage grass, dirt1, dirt2, dirt3, topRightGrass, topLeftGrass, rightGrass, leftGrass, bottomRightGrass,
+				bottomLeftGrass, sandTop, sandBottom;
 	public static Map<List<BufferedImage>, List<Dimension>> walk = new HashMap<>();
 	public static Map<List<BufferedImage>, List<Dimension>> still = new HashMap<>();
 	
 	public static void init() {		
-		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/Tiles1.png"));
+		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/Blocks.png"));
+		
+		dirt1 = sheet.crop(0, 0, width, height);
+		dirt2 = sheet.crop(width, 0, width, height);
+		dirt3 = sheet.crop(width * 2, 0, width, height);
 		
 		grass = sheet.crop(0, height, width, height);
+		topRightGrass = sheet.crop(width, height, width, height);
+		topLeftGrass = sheet.crop(width * 2, height, width, height);
 		
+		rightGrass = sheet.crop(0, height * 2, width, height);
+		leftGrass = sheet.crop(width, height * 2, width, height);
+		
+		bottomRightGrass = sheet.crop(0, height * 3, width, height);
+		bottomLeftGrass = sheet.crop(width, height * 3, width, height);
+		
+		sandTop = sheet.crop(width * 2, height * 2, width, height);
+		sandBottom = sheet.crop(width * 2, height * 3, width, height);
+		
+		// player walking
 		List<BufferedImage> images = new ArrayList<>();
 		List<Dimension> dimensions = new ArrayList<>();
 
@@ -54,6 +71,7 @@ public class Assets {
 		
 		walk.put(images, dimensions);
 		
+		// player still
 		images = new ArrayList<>();
 		dimensions = new ArrayList<>();
 		sheet = new SpriteSheet(ImageLoader.loadImage("/textures/png/still.png"));

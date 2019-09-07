@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 
 import GameState.Tiles.Tile;
-import Utils.FileReader;
+import GameState.WorldGenerator.Generator;
 import Utils.ImageLoader;
 
 public class World {
@@ -22,9 +22,9 @@ public class World {
 	}
 	
 	public void init(String path) {
+		int seed = 34894314;
 		background = ImageLoader.loadImage("/textures/BG1.jpg");
-		FileReader reader = new FileReader();
-		String[] elements = reader.readFile(path).split("\\s+"); // separate all file's elements
+		String[] elements = Generator.generateWorld(200, 100, seed).split("\\s+"); // separate all file's elements
 		width = Integer.valueOf(elements[0]); // get how many tiles will be horizontal
 		height = Integer.valueOf(elements[1]); // get how many tils will be vertical
 		

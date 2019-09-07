@@ -16,9 +16,19 @@ public class Tile {
 	 * List of tile objects
 	 */
 	public static Tile air = new Tile(null, 0, -1, false);
-	public static Tile grass = new Tile(Assets.grass, 1, 10, true);
-	
-	
+	public static Tile topLeftGrass = new Tile(Assets.topLeftGrass, 1, 10, true);
+	public static Tile grass = new Tile(Assets.grass, 2, 10, true);
+	public static Tile toRightGrass = new Tile(Assets.topRightGrass, 3, 10, true);
+	public static Tile leftGrass = new Tile(Assets.leftGrass, 4, 10, true);
+	public static Tile rightGrass = new Tile(Assets.rightGrass, 5, 10, true);
+	public static Tile bottomLeftGrass = new Tile(Assets.bottomLeftGrass, 6, 10, true);
+	public static Tile bottomRightGrass = new Tile(Assets.bottomRightGrass, 7, 10, true);
+	public static Tile dirt1 = new Tile(Assets.dirt1, 8, 10, true);
+	public static Tile dirt2 = new Tile(Assets.dirt2, 9, 10, true);
+	public static Tile dirt3 = new Tile(Assets.dirt3, 10, 10, true);
+	public static Tile sandTop = new Tile(Assets.sandTop, 11, 10, true);
+	public static Tile sandBottom = new Tile(Assets.sandBottom, 12, 10, true);
+
 	private BufferedImage image;
 	private boolean isSolid;
 	private int health, id;
