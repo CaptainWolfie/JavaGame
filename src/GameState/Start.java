@@ -1,11 +1,14 @@
 package GameState;
 
 import java.awt.Graphics;
+import java.awt.MouseInfo;
 import java.awt.image.BufferStrategy;
 import java.io.FileNotFoundException;
 
 import GameState.Entities.Player;
+import GameState.Tiles.Tile;
 import Utils.Assets;
+import Utils.ImageLoader;
 import Utils.Music;
 import Utils.Screen;
 
@@ -71,6 +74,11 @@ public class Start implements Runnable {
 		// start drawing
 		world.render(g);
 		player.render(g);
+		/*
+		 * Draw the current block
+		 */
+		
+		g.drawImage(ImageLoader.loadImage("/textures/CurrentTile.png"), (MouseInfo.getPointerInfo().getLocation().x - screen.getFrame().getLocation().x) / Tile.getWidth() * Tile.getWidth(), (MouseInfo.getPointerInfo().getLocation().y - screen.getFrame().getLocation().y) / Tile.getHeight() * Tile.getHeight(), null);
 		// stop drawing
 		bs.show(); // show
 		g.dispose(); // destroy
