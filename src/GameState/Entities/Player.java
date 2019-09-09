@@ -116,6 +116,12 @@ public class Player {
 		
 		updateGravity();
 		
+		if (y - camera.getY() >= frame.getHeight() - 100)
+			camera.setY((int)(camera.getY() + kinetic/dynamic));
+			
+		if (y - camera.getY() <= 100)
+			camera.setY((int)(camera.getY() - kinetic/dynamic));
+		
 		animation.update();
 	}
 	

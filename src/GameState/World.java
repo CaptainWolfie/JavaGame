@@ -26,7 +26,7 @@ public class World {
 	public void init(String path, Camera camera) {
 		this.camera = camera;
 
-		int seed = 34894314; // world's seed
+		int seed = 3489431; // world's seed
 
 		background = ImageLoader.loadImage("/textures/BG1.jpg"); // load background image
 		
