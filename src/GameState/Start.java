@@ -16,6 +16,8 @@ public class Start implements Runnable {
 	
 	private Thread thread;
 	
+	private Camera camera;
+	
 	private boolean running;
 	
 	private BufferStrategy bs;
@@ -52,12 +54,14 @@ public class Start implements Runnable {
 		Assets.init();
 		screen = new Screen(TITLE, WIDTH, HEIGHT);
 		world = new World(screen.getFrame());
-		world.init("src/Maps/Map.txt");
-		player = new Player(screen, 0, 0, 22, 32, world);
+		camera = new Camera(screen.getFrame(), world);
+		world.init("src/Maps/Map.txt", camera);
+		player = new Player(screen, 0, 0, 22, 32, world, camera);
 	}
 	
 	// update the variables
 	private void update(double latency) {
+		world.update();
 		player.update(latency);
 	}
 	

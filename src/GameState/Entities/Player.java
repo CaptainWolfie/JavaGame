@@ -7,6 +7,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
+
+import GameState.Camera;
 import GameState.World;
 import GameState.Animations.Animation;
 import GameState.Tiles.Tile;
@@ -37,6 +40,8 @@ public class Player {
 	private Animation animation;
 	private Keyboard keyboard;
 	private World world;
+	private Camera camera;
+	private JFrame frame;
 	
 	// gravity variables
 	private boolean falling = false, jumping = false;
@@ -47,14 +52,16 @@ public class Player {
 	// player dimension variables
 	private int x, y, width, height, speed = 4;
 	
-	public Player(Screen screen, int x, int y, int width, int height, World world) {
+	public Player(Screen screen, int x, int y, int width, int height, World world, Camera camera) {
 		init();
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.frame = screen.getFrame();
 		this.keyboard = screen.getKeyboard();
 		this.world = world;
+		this.camera = camera;
 	}
 	
 	private void init() {
@@ -68,7 +75,7 @@ public class Player {
 	}
 	
 	public void render(Graphics g) {
-		animation.render(g, x, y, width, height, lastKey == Keys.LEFT);
+		animation.render(g, x - camera.getX(), y - camera.getY(), width, height, lastKey == Keys.LEFT);
 	}
 	
 	public void update(double latency) {
@@ -227,18 +234,25 @@ public class Player {
 		if (tileFound)
 			return;
 		
+		if (frame.getWidth() - (x - camera.getX()) <= 170)
+			camera.setX(camera.getX() + speed);
 		x+=speed;
 	}
 	
 	private void moveLeft(int speed) {
 		boolean tileFound = false;
 		for (int i = 0; i < height; i++) {
+			if (x - camera.getX() - speed + 8 <= 0) // if player - speed is < 0
+				tileFound = true;
+			
 			if (world.getTile((x + 8 - speed) / Tile.getWidth(), (y + i) / Tile.getWidth()) != Tile.air)
 				tileFound = true;
 		}
 		if (tileFound)
 			return;
 		
+		if (x - camera.getX() <= 170)
+			camera.setX(camera.getX() - speed);
 		x-=speed;
 	}
 	
