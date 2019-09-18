@@ -77,12 +77,18 @@ public class Start implements Runnable {
 		g.clearRect(0, 0, WIDTH, HEIGHT); // clear screen
 		// start drawing
 		world.render(g);
-		player.render(g);
+		
 		/*
 		 * Draw the current block
 		 */
-		
-		g.drawImage(ImageLoader.loadImage("/textures/CurrentTile.png"), (MouseInfo.getPointerInfo().getLocation().x - screen.getFrame().getLocation().x) / Tile.getWidth() * Tile.getWidth(), (MouseInfo.getPointerInfo().getLocation().y - screen.getFrame().getLocation().y) / Tile.getHeight() * Tile.getHeight(), null);
+		int mouseX = MouseInfo.getPointerInfo().getLocation().x;
+		int mouseY = MouseInfo.getPointerInfo().getLocation().y;
+		g.drawImage(ImageLoader.loadImage("/textures/CurrentTile.png"), 
+				(mouseX - screen.getFrame().getLocation().x + (camera.getX() % Tile.getWidth())) / Tile.getWidth() * Tile.getWidth() - (camera.getX() % Tile.getWidth()), 
+				(mouseY - screen.getFrame().getLocation().y + (camera.getY() % Tile.getHeight())) / Tile.getHeight() * Tile.getHeight() - (camera.getY() % Tile.getHeight()),  null); 
+
+		player.render(g);
+
 		// stop drawing
 		bs.show(); // show
 		g.dispose(); // destroy

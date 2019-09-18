@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import Input.Keyboard;
+import Input.Mouse;
 
 public class Screen {
 	
@@ -19,6 +20,7 @@ public class Screen {
 	private JFrame frame;
 	
 	private Keyboard keyboard = new Keyboard();
+	private Mouse mouse = new Mouse();
 	
 	public Screen(String TITLE, int WIDTH, int HEIGHT) {
 		this.WIDTH = WIDTH;
@@ -33,6 +35,8 @@ public class Screen {
 		frame.setUndecorated(true);
 		frame.setLocationRelativeTo(null);
 		frame.addKeyListener(keyboard);
+		frame.addMouseListener(mouse);
+		frame.addMouseMotionListener(mouse);
 		setCursor();
 		frame.setVisible(true);
 		
@@ -47,12 +51,14 @@ public class Screen {
 		canvas.setMinimumSize(size);
 		canvas.setMaximumSize(size);
 		canvas.addKeyListener(keyboard);
+		canvas.addMouseListener(mouse);
+		canvas.addMouseMotionListener(mouse);
 		frame.add(canvas);
 	}
 	
 	private void setCursor() {
 		frame.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
-				new ImageIcon("res/textures/cursor.png").getImage(),
+				new ImageIcon("res/textures/Cursors/Default.png").getImage(),
 				new Point(0,0),"custom cursor"));
 	}
 	
@@ -74,6 +80,10 @@ public class Screen {
 	
 	public Keyboard getKeyboard() {
 		return keyboard;
+	}
+	
+	public Mouse getMouse() {
+		return mouse;
 	}
 
 }

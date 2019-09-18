@@ -1,7 +1,7 @@
 package GameState.Entities;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import GameState.World;
 import GameState.Animations.Animation;
 import GameState.Tiles.Tile;
 import Input.Keyboard;
+import Input.Mouse;
 import Utils.Assets;
 import Utils.Screen;
 
@@ -27,7 +28,8 @@ public class Player {
 	private enum State {
 		WALKING,
 		RUNNING,
-		STILL
+		STILL,
+		USING_TOOL
 	}
 	
 	// useful enums variables
@@ -36,9 +38,10 @@ public class Player {
 
 	// useful objects
 	private List<BufferedImage> images = new ArrayList<>();
-	private List<Dimension> dimensions = new ArrayList<>();
+	private List<Rectangle> dimensions = new ArrayList<>();
 	private Animation animation;
 	private Keyboard keyboard;
+	private Mouse mouse;
 	private World world;
 	private Camera camera;
 	private JFrame frame;
@@ -60,6 +63,7 @@ public class Player {
 		this.height = height;
 		this.frame = screen.getFrame();
 		this.keyboard = screen.getKeyboard();
+		this.mouse = screen.getMouse();
 		this.world = world;
 		this.camera = camera;
 	}
@@ -68,10 +72,10 @@ public class Player {
 		for (List<BufferedImage> i : Assets.still.keySet()) {
 			images = i;
 		}
-		for (List<Dimension> i : Assets.still.values()) {
+		for (List<Rectangle> i : Assets.still.values()) {
 			dimensions = i;
 		}
-		animation = new Animation(images, dimensions, (imagesState == State.RUNNING) ? imagesRunSpeed : imagesWalkSpeed, 2);
+		animation = new Animation(images, dimensions, imagesWalkSpeed, 2);
 	}
 	
 	public void render(Graphics g) {
@@ -81,10 +85,16 @@ public class Player {
 	public void update(double latency) {
 		int speed = (int) (this.speed * latency); // fixed bug left was faster than right when you add the number that time
 		
+		if (imagesState == State.USING_TOOL) {
+			if (animation.getCurrentImage() == animation.getMaxImages()) {
+				changeState(State.STILL);
+			}
+		}
+		
 		/*
 		 * If both buttons are pressed dont do anything
 		 */
-		if (!(keyboard.pressed[KeyEvent.VK_D] && keyboard.pressed[KeyEvent.VK_A]) && (keyboard.pressed[KeyEvent.VK_D]
+		if (!(keyboard.pressed[KeyEvent.VK_D] && keyboard.pressed[KeyEvent.VK_A]) && imagesState != State.USING_TOOL && (keyboard.pressed[KeyEvent.VK_D]
 				|| keyboard.pressed[KeyEvent.VK_A]) || keyboard.pressed[KeyEvent.VK_SHIFT]) {
 			/*
 			 * LEFT or RIGHT or SHIFT are pressed but not both left and right
@@ -102,7 +112,11 @@ public class Player {
 				moveLeft(speed);
 			}
 		} else
-			changeState(State.STILL);
+			if (imagesState != State.USING_TOOL)
+				changeState(State.STILL);
+		
+		if (mouse.LeftClick)
+			changeState(State.USING_TOOL);
 
 		if (keyboard.pressed[KeyEvent.VK_W] && !jumping && !falling) {
 			jumping = true;
@@ -135,29 +149,43 @@ public class Player {
 				for (List<BufferedImage> i : Assets.still.keySet()) {
 					images = i;
 				}
-				for (List<Dimension> i : Assets.still.values()) {
+				for (List<Rectangle> i : Assets.still.values()) {
 					dimensions = i;
 				}
-				animation.setImages(images, dimensions);
+				animation.setImages(images, dimensions, false);
 				speed = walkSpeed;
+				animation.setDelay(imagesWalkSpeed);
 			} else if (state == State.RUNNING) {
 				for (List<BufferedImage> i : Assets.walk.keySet()) {
 					images = i;
 				}
-				for (List<Dimension> i : Assets.walk.values()) {
+				for (List<Rectangle> i : Assets.walk.values()) {
 					dimensions = i;
 				}
-				animation.setImages(images, dimensions);
+				animation.setImages(images, dimensions, true);
 				speed = runSpeed;
+				animation.setDelay(imagesRunSpeed);
 			} else {
 				for (List<BufferedImage> i : Assets.walk.keySet()) {
 					images = i;
 				}
-				for (List<Dimension> i : Assets.walk.values()) {
+				for (List<Rectangle> i : Assets.walk.values()) {
 					dimensions = i;
 				}
-				animation.setImages(images, dimensions);
+				animation.setImages(images, dimensions, false);
 				speed = walkSpeed;
+				animation.setDelay(speed);
+			}
+			
+			if (state == State.USING_TOOL) {
+				for (List<BufferedImage> i : Assets.use.keySet()) {
+					images = i;
+				}
+				for (List<Rectangle> i : Assets.use.values()) {
+					dimensions = i;
+				}
+				animation.setImages(images, dimensions, false);
+				animation.setDelay(7);
 			}
 		}
 	}

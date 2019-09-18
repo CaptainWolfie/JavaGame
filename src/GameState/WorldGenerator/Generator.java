@@ -1,5 +1,7 @@
 package GameState.WorldGenerator;
 
+import java.util.Random;
+
 public class Generator {
 
 	private static String world;
@@ -13,7 +15,8 @@ public class Generator {
 				if (y < noise.getNoise(x, height)) {
 					world += "0" + ((x == width - 1) ? "\n" : " ");
 				} else {
-					world += "8" + ((x == width - 1) ? "\n" : " ");
+					Random r = new Random();
+					world += (r.nextInt(2) + 8) + ((x == width - 1) ? "\n" : " ");
 				}
 			}
 		}

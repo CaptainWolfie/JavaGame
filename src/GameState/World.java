@@ -30,7 +30,7 @@ public class World {
 
 		background = ImageLoader.loadImage("/textures/BG1.jpg"); // load background image
 		
-		String[] elements = Generator.generateWorld(200, 100, seed).split("\\s+"); // separate all file's elements
+		String[] elements = Generator.generateWorld(1000, 50, seed).split("\\s+"); // separate all file's elements
 		
 		width = Integer.valueOf(elements[0]); // get how many tiles will be horizontal
 		height = Integer.valueOf(elements[1]); // get how many tils will be vertical
