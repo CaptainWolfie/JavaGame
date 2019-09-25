@@ -43,7 +43,7 @@ public class Start implements Runnable {
 		this.HEIGHT = height;
 		start(); // creates the thread
 	}
-	
+		
 	// initialize the variables
 	private void init() {
 		try {
@@ -53,9 +53,10 @@ public class Start implements Runnable {
 		}
 		Assets.init();
 		screen = new Screen(TITLE, WIDTH, HEIGHT);
-		world = new World(screen.getFrame());
+		world = World.getInstance(screen.getFrame());
 		camera = new Camera(screen.getFrame(), world);
-		world.init("src/Maps/Map.txt", camera);
+		String path = System.getProperty("user.home") + "\\Weliopy\\Map.txt";
+		world.init(path, camera);
 		player = new Player(screen, 0, 0, 22, 32, world, camera);
 	}
 	
@@ -134,7 +135,9 @@ public class Start implements Runnable {
 		}
 	}
 	
-	
+	public Screen getScreen() {
+		return screen;
+	}
 	
 	
 	/*

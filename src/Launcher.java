@@ -1,4 +1,6 @@
 import GameState.Start;
+import GameState.World;
+import Utils.Music;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -9,8 +11,15 @@ import javafx.stage.Stage;
  */
 public class Launcher extends Application {
 	
+	
 	public static void main(String[] args) {
-		new Start("Game Launcher", 900, 700);
+		Start start = new Start("Game Launcher", 900, 700);
+	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+	        public void run() {
+	        	Music.getMusicPlayer().stop();
+	    		World.getInstance(start.getScreen().getFrame()).saveWorld();;
+	        }
+	    }, "Shutdown-thread"));
 	}
 
 	@Override

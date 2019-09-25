@@ -22,7 +22,7 @@ public class Music {
 		}
 	}
 	
-	public static void loop(String path) {
-
+	public static MediaPlayer getMusicPlayer() {
+		return mediaPlayer;
 	}
 }
