@@ -9,6 +9,7 @@ import GameState.Tiles.Tile;
 import GameState.WorldGenerator.Generator;
 import Utils.FileManager;
 import Utils.ImageLoader;
+import Utils.Security;
 
 public class World {
 	
@@ -48,7 +49,7 @@ public class World {
 		if (!manager.fileExists(path))
 			elements = Generator.generateWorld(1000, 50, seed).split("\\s+"); // separate all file's elements
 		else {
-			elements = manager.readFile(path).split("\\s+"); // separate all file's elements
+			elements = Security.getInstance().decrypt(manager.readFile(path)).split("\\s+"); // separate all file's elements
 		}
 		
 		width = Integer.valueOf(elements[0]); // get how many tiles will be horizontal
@@ -111,7 +112,7 @@ public class World {
 	public void saveWorld() {
 		FileManager manager = new FileManager();
 		System.out.println("Saving world..");
-		manager.writeFile(path, getWorld());
+		manager.writeFile(path, Security.getInstance().encrypt(getWorld().trim()));
 		System.out.println("World saved!");
 	}
 	
