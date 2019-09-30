@@ -7,13 +7,14 @@ import javax.swing.JFrame;
 
 import GameState.Tiles.Tile;
 import GameState.WorldGenerator.Generator;
+import Utils.Assets;
 import Utils.FileManager;
 import Utils.ImageLoader;
 import Utils.Security;
 
 public class World {
 	
-	private int[][] blocks;
+	private int[][] blocks, health;
 	private int width, height, xStart, xEnd, yStart, yEnd;
 	
 	private String path = "";
@@ -56,9 +57,11 @@ public class World {
 		height = Integer.valueOf(elements[1]); // get how many tils will be vertical
 
 		blocks = new int[width][height]; // initializing the array
+		health = new int[width][height];
 		for (int y = 0; y < height; y++) { // for-y-loop
 			for (int x = 0; x < width; x++) { // for-x-loop
 				blocks[x][y] = Integer.valueOf(elements[(width * y) + x + 2]); // + 2 because with and height are in the same array
+				health[x][y] = getTile(x,y).getHealth();
 			}
 		}
 	}
@@ -69,8 +72,20 @@ public class World {
 		for (int y = yStart; y < yEnd; y++) {
 			for (int x = xStart; x < xEnd; x++) {
 				getTile(x,y).render(g, x * Tile.getWidth() - camera.getX(), y * Tile.getHeight() - camera.getY());
+				if (getTile(x,y).isUnbreakable())
+					continue;
+				if (health[x][y] < (getTile(x,y).getHealth() / 4) * 4)
+					g.drawImage(Assets.blockBreaking1, x * Tile.getWidth() - camera.getX(), y * Tile.getHeight() - camera.getY(), null);
+				if (health[x][y] <= (getTile(x,y).getHealth() / 4) * 3)
+					g.drawImage(Assets.blockBreaking2, x * Tile.getWidth() - camera.getX(), y * Tile.getHeight() - camera.getY(), null);
+				if (health[x][y] <= (getTile(x,y).getHealth() / 4) * 2)
+					g.drawImage(Assets.blockBreaking3, x * Tile.getWidth() - camera.getX(), y * Tile.getHeight() - camera.getY(), null);
+				if (health[x][y] <= getTile(x,y).getHealth() / 4)
+					g.drawImage(Assets.blockBreaking4, x * Tile.getWidth() - camera.getX(), y * Tile.getHeight() - camera.getY(), null);
+
 			}
 		}
+		
 	}
 	
 	public void update() {
@@ -78,6 +93,17 @@ public class World {
 		xEnd = Math.min(width, (camera.getX() + screen.getWidth()) / Tile.getWidth() + 2); // if camera is over width it will end at world's width
 		yStart = Math.max(0, camera.getY() / Tile.getHeight() - 1); // same as xStart but for height
 		yEnd = Math.min(height, (camera.getY() + screen.getHeight()) / Tile.getHeight() + 2); // same as xEnd but for height
+		
+		for (int y = yStart; y < yEnd; y++) {
+			for (int x = xStart; x < xEnd; x++) {
+				if (!getTile(x,y).isUnbreakable()) {
+					if (health[x][y] <= 0) {
+						health[x][y] = -1;
+						blocks[x][y] = 0;
+					}
+				}
+			}
+		}
 	}
 	
 	
@@ -109,10 +135,18 @@ public class World {
 		return world;
 	}
 	
+	public int getHealth(int x, int y) {
+		return health[x][y];
+	}
+	
+	public void setHealth(int x, int y, int health) {
+		this.health[x][y] = health;
+	}
+	
 	public void saveWorld() {
 		FileManager manager = new FileManager();
 		System.out.println("Saving world..");
-		manager.writeFile(path, Security.getInstance().encrypt(getWorld().trim()));
+		manager.writeFile(path, Security.getInstance().encrypt(getWorld()));
 		System.out.println("World saved!");
 	}
 	
@@ -123,5 +157,4 @@ public class World {
 	public int getHeight() {
 		return height;
 	}
-
 }

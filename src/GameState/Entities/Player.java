@@ -1,6 +1,7 @@
 package GameState.Entities;
 
 import java.awt.Graphics;
+import java.awt.MouseInfo;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -53,7 +54,7 @@ public class Player {
 	private int walkSpeed = 4, runSpeed = 6, imagesWalkSpeed = 5, imagesRunSpeed = 3;
 	
 	// player dimension variables
-	private int x, y, width, height, speed = 4;
+	private int x, y, width, height, speed = 4, range = 3;
 	
 	public Player(Screen screen, int x, int y, int width, int height, World world, Camera camera) {
 		init();
@@ -86,6 +87,7 @@ public class Player {
 		int speed = (int) (this.speed * latency); // fixed bug left was faster than right when you add the number that time
 		
 		if (imagesState == State.USING_TOOL) {
+			
 			if (animation.getCurrentImage() == animation.getMaxImages()) {
 				changeState(State.STILL);
 			}
@@ -115,8 +117,12 @@ public class Player {
 			if (imagesState != State.USING_TOOL)
 				changeState(State.STILL);
 		
-		if (mouse.LeftClick)
-			changeState(State.USING_TOOL);
+		if (mouse.LeftClick) {
+			if (canInteract() && !imagesState.equals(State.USING_TOOL) && world.getTile(getXBlockAtMouse(), getYBlockAtMouse()) != Tile.air) {
+				world.setHealth(getXBlockAtMouse(), getYBlockAtMouse(), world.getHealth(getXBlockAtMouse(), getYBlockAtMouse()) - 7);
+				changeState(State.USING_TOOL);
+			}
+		}
 
 		if (keyboard.pressed[KeyEvent.VK_W] && !jumping && !falling) {
 			jumping = true;
@@ -185,7 +191,7 @@ public class Player {
 					dimensions = i;
 				}
 				animation.setImages(images, dimensions, false);
-				animation.setDelay(7);
+				animation.setDelay(5);
 			}
 		}
 	}
@@ -300,17 +306,60 @@ public class Player {
 		}
 		kinetic-=2;
 		dynamic+=.3;
-		y-= kinetic/dynamic;
+		
+		boolean blockFound = false;
+		// check for each x of player asset after the 8th x and 7 before
+		for (int x1 = 9; x1 <= width - 7; x1++) {
+			if (world.getTile((x + x1) / Tile.getWidth(), (int)((y - kinetic/dynamic) / Tile.getHeight())).isSolid()) {
+				blockFound = true;
+				kinetic = 0;
+			}
+		}
+		if (!blockFound)
+			y-=kinetic/dynamic;
 	}
 	
 	
 	public int getWorldX() {
-		return x / Tile.getWidth();
+		return (x + 8) / Tile.getWidth();
 	}
 	
 	public int getWorldY() {
 		return y / Tile.getHeight();
 	}
 	
+	public int getRange() {
+		return range;
+	}
+	
+	public int getXBlockAtMouse() {
+		int mouseX = MouseInfo.getPointerInfo().getLocation().x;
+
+		int mouseBlockX = ((mouseX - frame.getLocation().x) + camera.getX()) / Tile.getWidth();
+		
+		return mouseBlockX;
+	}
+	
+	public int getYBlockAtMouse() {
+		int mouseY = MouseInfo.getPointerInfo().getLocation().y;
+
+		int mouseBlockY = ((mouseY - frame.getLocation().y) + camera.getY()) / Tile.getHeight();
+		
+		return mouseBlockY;
+	}
+	
+	public boolean canInteract() {
+		int mouseX = MouseInfo.getPointerInfo().getLocation().x;
+		int mouseY = MouseInfo.getPointerInfo().getLocation().y;
+
+		int mouseBlockX = ((mouseX - frame.getLocation().x) + camera.getX()) / Tile.getWidth();
+		int mouseBlockY = ((mouseY - frame.getLocation().y) + camera.getY()) / Tile.getHeight();
+		
+		if (mouseBlockX > getWorldX() + getRange() || mouseBlockX < getWorldX() - getRange() ||
+				mouseBlockY - 1 > getWorldY() + getRange() || mouseBlockY < getWorldY() - getRange())
+			return false;
+		else
+			return true;
+	}
 	
 }

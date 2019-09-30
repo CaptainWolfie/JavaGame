@@ -13,7 +13,7 @@ public class Assets {
 	private static int height = 16;
 	
 	public static BufferedImage grass, dirt1, dirt2, dirt3, topRightGrass, topLeftGrass, rightGrass, leftGrass, bottomRightGrass,
-				bottomLeftGrass, sandTop, sandBottom;
+				bottomLeftGrass, sandTop, sandBottom, blockBreaking1, blockBreaking2, blockBreaking3, blockBreaking4;
 	public static Map<List<BufferedImage>, List<Rectangle>> walk = new HashMap<>();
 	public static Map<List<BufferedImage>, List<Rectangle>> still = new HashMap<>();
 	public static Map<List<BufferedImage>, List<Rectangle>> use = new HashMap<>();
@@ -37,6 +37,15 @@ public class Assets {
 		
 		sandTop = sheet.crop(width * 2, height * 2, width, height);
 		sandBottom = sheet.crop(width * 2, height * 3, width, height);
+		
+		// block breaking
+		sheet = new SpriteSheet(ImageLoader.loadImage("/textures/BlockBreaking.png"));
+		
+		blockBreaking1 = sheet.crop(0, 0, width, height);
+		blockBreaking2 = sheet.crop(width, 0, width, height);
+		blockBreaking3 = sheet.crop(width * 2, 0, width, height);
+		blockBreaking4 = sheet.crop(width * 3, 0, width, height);
+
 		
 		// player walking
 		List<BufferedImage> images = new ArrayList<>();

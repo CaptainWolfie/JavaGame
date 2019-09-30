@@ -5,6 +5,7 @@ import java.awt.MouseInfo;
 import java.awt.image.BufferStrategy;
 import java.io.FileNotFoundException;
 
+import CaptainWolfie.UIBlocks.UIMain;
 import GameState.Entities.Player;
 import GameState.Tiles.Tile;
 import Utils.Assets;
@@ -33,7 +34,7 @@ public class Start implements Runnable {
 	private int WIDTH, HEIGHT;
 	
 	private String TITLE;
-
+	
 	/*
 	 * Constructor
 	 */
@@ -58,6 +59,7 @@ public class Start implements Runnable {
 		String path = System.getProperty("user.home") + "\\Weliopy\\Map.txt";
 		world.init(path, camera);
 		player = new Player(screen, 0, 0, 22, 32, world, camera);
+		UIMain.init(screen.getFrame());
 	}
 	
 	// update the variables
@@ -77,19 +79,19 @@ public class Start implements Runnable {
 		g = bs.getDrawGraphics(); // create graphics
 		g.clearRect(0, 0, WIDTH, HEIGHT); // clear screen
 		// start drawing
+
 		world.render(g);
-		
 		/*
 		 * Draw the current block
 		 */
 		int mouseX = MouseInfo.getPointerInfo().getLocation().x;
 		int mouseY = MouseInfo.getPointerInfo().getLocation().y;
-		g.drawImage(ImageLoader.loadImage("/textures/CurrentTile.png"), 
+
+
+		g.drawImage(ImageLoader.loadImage((player.canInteract()) ? "/textures/CurrentTile.png" : "/textures/tooFarTile.png"), 
 				(mouseX - screen.getFrame().getLocation().x + (camera.getX() % Tile.getWidth())) / Tile.getWidth() * Tile.getWidth() - (camera.getX() % Tile.getWidth()), 
 				(mouseY - screen.getFrame().getLocation().y + (camera.getY() % Tile.getHeight())) / Tile.getHeight() * Tile.getHeight() - (camera.getY() % Tile.getHeight()),  null); 
-
 		player.render(g);
-
 		// stop drawing
 		bs.show(); // show
 		g.dispose(); // destroy

@@ -55,7 +55,7 @@ public class Tile {
 	public void render(Graphics g, int x, int y) {
 		g.drawImage(image, x, y, WIDTH, HEIGHT, null);
 	}
-	
+
 	public boolean isSolid() {
 		return isSolid;
 	}
@@ -67,7 +67,7 @@ public class Tile {
 	public int getHealth() {
 		return health;
 	}
-	
+
 	public static int getWidth() {
 		return WIDTH;
 	}
