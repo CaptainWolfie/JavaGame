@@ -56,6 +56,9 @@ public class Player {
 	// player dimension variables
 	private int x, y, width, height, speed = 4, range = 3;
 	
+	// block break
+	private int blockX, blockY;
+	
 	public Player(Screen screen, int x, int y, int width, int height, World world, Camera camera) {
 		init();
 		this.x = x;
@@ -89,6 +92,8 @@ public class Player {
 		if (imagesState == State.USING_TOOL) {
 			
 			if (animation.getCurrentImage() == animation.getMaxImages()) {
+				if (canInteract(blockX, blockY))
+					world.setHealth(blockX, blockY, world.getHealth(blockX, blockY) - 10);
 				changeState(State.STILL);
 			}
 		}
@@ -119,7 +124,8 @@ public class Player {
 		
 		if (mouse.LeftClick) {
 			if (canInteract() && !imagesState.equals(State.USING_TOOL) && world.getTile(getXBlockAtMouse(), getYBlockAtMouse()) != Tile.air) {
-				world.setHealth(getXBlockAtMouse(), getYBlockAtMouse(), world.getHealth(getXBlockAtMouse(), getYBlockAtMouse()) - 7);
+				blockX = getXBlockAtMouse();
+				blockY = getYBlockAtMouse();
 				changeState(State.USING_TOOL);
 			}
 		}
@@ -244,7 +250,7 @@ public class Player {
 			for (int x1 = 9; x1 <= width - 7; x1++) {
 				for (int y1 = 1; y1 <= playerFinalY - getWorldY() +1; y1++) {
 					// check if a tile between player and final player y is solid
-					if (world.getTile((x+x1)/Tile.getWidth(), (y + speed) / Tile.getHeight() + 2 +y1).isSolid()) {
+					if (world.getTile((x+x1)/Tile.getWidth(), (y + speed) / Tile.getHeight() + 1 +y1).isSolid()) {
 						y = (getWorldY()+y1) * Tile.getHeight(); // here we dont have +2 because the Y is on the top of player's head and this time we dont check for any blocks under his legs
 						falling = false;
 						blockFound = true;
@@ -267,7 +273,7 @@ public class Player {
 	
 	private void moveRight(int speed) {
 		boolean tileFound = false;
-		for (int i = 0; i < height; i++) {
+		for (int i = 2; i < height - 4; i++) {
 			if (world.getTile((x - 7 + width + speed) / Tile.getWidth(), (y + i) / Tile.getWidth()) != Tile.air)
 				tileFound = true;
 		}
@@ -281,7 +287,7 @@ public class Player {
 	
 	private void moveLeft(int speed) {
 		boolean tileFound = false;
-		for (int i = 0; i < height; i++) {
+		for (int i = 2; i < height - 4; i++) {
 			if (x - camera.getX() - speed + 8 <= 0) // if player - speed is < 0
 				tileFound = true;
 			
@@ -357,6 +363,14 @@ public class Player {
 		
 		if (mouseBlockX > getWorldX() + getRange() || mouseBlockX < getWorldX() - getRange() ||
 				mouseBlockY - 1 > getWorldY() + getRange() || mouseBlockY < getWorldY() - getRange())
+			return false;
+		else
+			return true;
+	}
+	
+	public boolean canInteract(int x, int y) {
+		if (x > getWorldX() + getRange() || x < getWorldX() - getRange() ||
+				y - 1 > getWorldY() + getRange() || y < getWorldY() - getRange())
 			return false;
 		else
 			return true;
