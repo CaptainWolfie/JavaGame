@@ -143,6 +143,9 @@ public class World {
 	}
 	
 	public void setHealth(int x, int y, int health) {
+		if (x < 0 || x >= width || y < 0 || y >= height) // if index is out of bounds
+			return;
+		
 		this.health[x][y] = health;
 	}
 	
