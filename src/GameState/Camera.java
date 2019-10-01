@@ -31,6 +31,9 @@ public class Camera {
 		if (y < 0) {
 			this.y = 0;
 			return;
+		} else if ((y + frame.getHeight()) / Tile.getHeight() >= world.getHeight()) {
+			this.y = world.getHeight() * Tile.getHeight() - frame.getHeight();
+			return;
 		}
 		this.y = y;
 	}

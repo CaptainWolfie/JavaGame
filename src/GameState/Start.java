@@ -3,7 +3,6 @@ package GameState;
 import java.awt.Graphics;
 import java.awt.MouseInfo;
 import java.awt.image.BufferStrategy;
-import java.io.FileNotFoundException;
 
 import CaptainWolfie.UIBlocks.UIMain;
 import GameState.Entities.Player;
@@ -47,11 +46,7 @@ public class Start implements Runnable {
 		
 	// initialize the variables
 	private void init() {
-		try {
-			Music.play("FirstDay.mp3");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		Music.play("FirstDay.mp3");
 		Assets.init();
 		screen = new Screen(TITLE, WIDTH, HEIGHT);
 		world = World.getInstance(screen.getFrame());

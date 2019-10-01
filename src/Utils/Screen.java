@@ -1,11 +1,12 @@
 package Utils;
 
 import java.awt.Canvas;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import Input.Keyboard;
@@ -57,9 +58,11 @@ public class Screen {
 	}
 	
 	private void setCursor() {
-		frame.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
-				new ImageIcon("res/textures/Cursors/Default.png").getImage(),
-				new Point(0,0),"custom cursor"));
+	    Toolkit toolkit = Toolkit.getDefaultToolkit();
+	    Image image = toolkit.getImage(getClass().getResource("/textures/Cursors/Default.png"));
+	    Point hotspot = new Point(0,0);
+	    Cursor cursor = toolkit.createCustomCursor(image, hotspot, "custom cursor");
+	    frame.setCursor(cursor);
 	}
 	
 	public int getWidth() {

@@ -2,7 +2,6 @@ package MenuState;
 
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.io.FileNotFoundException;
 
 import Utils.Music;
 import Utils.Screen;
@@ -36,11 +35,7 @@ public class Start implements Runnable {
 	
 	// initialize the variables
 	private void init() {
-		try {
-			Music.play("MenuMusic.mp3");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		Music.play("MenuMusic.mp3");
 		screen = new Screen(TITLE, WIDTH, HEIGHT);
 	}
 	
