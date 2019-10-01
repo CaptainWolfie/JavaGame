@@ -48,7 +48,7 @@ public class World {
 		FileManager manager = new FileManager();
 
 		if (!manager.fileExists(path))
-			elements = Generator.generateWorld(1000, 50, seed).split("\\s+"); // separate all file's elements
+			elements = Generator.generateWorld(100, 20, seed).split("\\s+"); // separate all file's elements
 		else {
 			elements = Security.getInstance().decrypt(manager.readFile(path)).split("\\s+"); // separate all file's elements
 		}

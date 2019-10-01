@@ -2,6 +2,7 @@ package GameState;
 
 import java.awt.Graphics;
 import java.awt.MouseInfo;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 
 import CaptainWolfie.UIBlocks.UIMain;
@@ -59,6 +60,14 @@ public class Start implements Runnable {
 	
 	// update the variables
 	private void update(double latency) {
+		
+		if (screen.getKeyboard().pressed[KeyEvent.VK_F11]) {
+			screen.getFrame().dispose();
+			screen.getFrame().setUndecorated(!screen.getFrame().isUndecorated());
+			screen.getFrame().setVisible(true);
+			screen.getKeyboard().pressed[KeyEvent.VK_F11] = false;
+		}
+		
 		world.update();
 		player.update(latency);
 	}
@@ -79,9 +88,9 @@ public class Start implements Runnable {
 		/*
 		 * Draw the current block
 		 */
-		int mouseX = MouseInfo.getPointerInfo().getLocation().x;
-		int mouseY = MouseInfo.getPointerInfo().getLocation().y;
-
+		
+		int mouseX = MouseInfo.getPointerInfo().getLocation().x - (screen.getFrame().getWidth() - screen.getFrame().getContentPane().getSize().width) / 2;
+		int mouseY = MouseInfo.getPointerInfo().getLocation().y - (screen.getFrame().getHeight() - screen.getFrame().getContentPane().getSize().height) + (screen.getFrame().getWidth() - screen.getFrame().getContentPane().getSize().width) / 2;
 
 		g.drawImage(ImageLoader.loadImage((player.canInteract()) ? "/textures/CurrentTile.png" : "/textures/tooFarTile.png"), 
 				(mouseX - screen.getFrame().getLocation().x + (camera.getX() % Tile.getWidth())) / Tile.getWidth() * Tile.getWidth() - (camera.getX() % Tile.getWidth()), 

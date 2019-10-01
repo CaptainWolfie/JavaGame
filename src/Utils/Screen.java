@@ -33,14 +33,12 @@ public class Screen {
 		frame = new JFrame(TITLE);
 		frame.setSize(new Dimension(WIDTH,HEIGHT));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setUndecorated(true);
 		frame.setLocationRelativeTo(null);
 		frame.addKeyListener(keyboard);
 		frame.addMouseListener(mouse);
 		frame.addMouseMotionListener(mouse);
 		setCursor();
 		frame.setVisible(true);
-		
 		createCanvas();
 		frame.pack();
 	}
