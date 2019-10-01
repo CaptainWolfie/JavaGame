@@ -339,7 +339,7 @@ public class Player {
 	}
 	
 	public int getXBlockAtMouse() {
-		int mouseX = MouseInfo.getPointerInfo().getLocation().x;
+		int mouseX = MouseInfo.getPointerInfo().getLocation().x - (frame.getWidth() - frame.getContentPane().getSize().width) / 2;
 
 		int mouseBlockX = ((mouseX - frame.getLocation().x) + camera.getX()) / Tile.getWidth();
 		
@@ -347,7 +347,7 @@ public class Player {
 	}
 	
 	public int getYBlockAtMouse() {
-		int mouseY = MouseInfo.getPointerInfo().getLocation().y;
+		int mouseY = MouseInfo.getPointerInfo().getLocation().y - (frame.getHeight() - frame.getContentPane().getSize().height) + (frame.getWidth() - frame.getContentPane().getSize().width) / 2;
 
 		int mouseBlockY = ((mouseY - frame.getLocation().y) + camera.getY()) / Tile.getHeight();
 		
@@ -355,8 +355,8 @@ public class Player {
 	}
 	
 	public boolean canInteract() {
-		int mouseX = MouseInfo.getPointerInfo().getLocation().x;
-		int mouseY = MouseInfo.getPointerInfo().getLocation().y;
+		int mouseX = MouseInfo.getPointerInfo().getLocation().x - (frame.getWidth() - frame.getContentPane().getSize().width) / 2;
+		int mouseY = MouseInfo.getPointerInfo().getLocation().y - (frame.getHeight() - frame.getContentPane().getSize().height) + (frame.getWidth() - frame.getContentPane().getSize().width) / 2;
 
 		int mouseBlockX = ((mouseX - frame.getLocation().x) + camera.getX()) / Tile.getWidth();
 		int mouseBlockY = ((mouseY - frame.getLocation().y) + camera.getY()) / Tile.getHeight();
