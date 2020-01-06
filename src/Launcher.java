@@ -14,15 +14,13 @@ public class Launcher extends Application {
 	
 	public static void main(String[] args) {
 		Start start = new Start("Game Launcher", 900, 700);
-	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-	        public void run() {
-	        	Music.getMusicPlayer().stop();
-	    		World.getInstance(start.getScreen().getFrame()).saveWorld();;
-	        }
-	    }, "Shutdown-thread"));
+	    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			Music.getMusicPlayer().stop();
+			World.getInstance(start.getScreen().getFrame()).saveWorld();
+		}, "Shutdown-thread"));
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) {
 	}
 }

@@ -130,6 +130,10 @@ public class Player {
 			}
 		}
 
+		if (mouse.RightClick) {
+			world.setBlock(getXBlockAtMouse(), getYBlockAtMouse(), Tile.sandTop);
+		}
+
 		if (keyboard.pressed[KeyEvent.VK_W] && !jumping && !falling) {
 			jumping = true;
 			kinetic = 35;
@@ -247,11 +251,11 @@ public class Player {
 			// if any block found solid between player Y and playerFinalY
 			boolean blockFound = false;
 			// check for each x of player asset after the 8th x and 7 before
-			for (int x1 = 9; x1 <= width - 7; x1++) {
-				for (int y1 = 1; y1 <= playerFinalY - getWorldY() +1; y1++) {
+			for (int x1 = 8; x1 < width - 7; x1++) {
+				for (int y1 = 1; y1 <= playerFinalY - getWorldY() + 1; y1++) {
 					// check if a tile between player and final player y is solid
-					if (world.getTile((x+x1)/Tile.getWidth(), (y + speed) / Tile.getHeight() + 1 +y1).isSolid()) {
-						y = (getWorldY()+y1) * Tile.getHeight(); // here we dont have +2 because the Y is on the top of player's head and this time we dont check for any blocks under his legs
+					if (world.getTile((x + x1) / Tile.getWidth(), (y + speed) / Tile.getHeight() + 1 + y1).isSolid()) {
+						y = (getWorldY() + y1) * Tile.getHeight(); // here we dont have +2 because the Y is on the top of player's head and this time we dont check for any blocks under his legs
 						falling = false;
 						blockFound = true;
 					}

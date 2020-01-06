@@ -11,9 +11,12 @@ public class Assets {
 	
 	private static int width = 16;
 	private static int height = 16;
-	
+
+	// blocks
 	public static BufferedImage grass, dirt1, dirt2, dirt3, topRightGrass, topLeftGrass, rightGrass, leftGrass, bottomRightGrass,
 				bottomLeftGrass, sandTop, sandBottom, blockBreaking1, blockBreaking2, blockBreaking3, blockBreaking4;
+	// drops
+	public static BufferedImage woodDrop;
 	public static Map<List<BufferedImage>, List<Rectangle>> walk = new HashMap<>();
 	public static Map<List<BufferedImage>, List<Rectangle>> still = new HashMap<>();
 	public static Map<List<BufferedImage>, List<Rectangle>> use = new HashMap<>();
@@ -112,5 +115,11 @@ public class Assets {
 		dimensions.add(new Rectangle(width - 24, 0, 24, height));
 		
 		use.put(images, dimensions);
+
+		/*
+		 * Drops
+		 */
+		// wood
+		sheet = new SpriteSheet(ImageLoader.loadImage("/textures/Items/Wood.png")); woodDrop = sheet.getImage();
 	}
 }

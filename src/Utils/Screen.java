@@ -22,6 +22,8 @@ public class Screen {
 	
 	private Keyboard keyboard = new Keyboard();
 	private Mouse mouse = new Mouse();
+
+	private String cursor = "";
 	
 	public Screen(String TITLE, int WIDTH, int HEIGHT) {
 		this.WIDTH = WIDTH;
@@ -37,7 +39,7 @@ public class Screen {
 		frame.addKeyListener(keyboard);
 		frame.addMouseListener(mouse);
 		frame.addMouseMotionListener(mouse);
-		setCursor();
+		setCursor("Default.png");
 		frame.setVisible(true);
 		createCanvas();
 		frame.pack();
@@ -53,14 +55,6 @@ public class Screen {
 		canvas.addMouseListener(mouse);
 		canvas.addMouseMotionListener(mouse);
 		frame.add(canvas);
-	}
-	
-	private void setCursor() {
-	    Toolkit toolkit = Toolkit.getDefaultToolkit();
-	    Image image = toolkit.getImage(getClass().getResource("/textures/Cursors/Default.png"));
-	    Point hotspot = new Point(0,0);
-	    Cursor cursor = toolkit.createCustomCursor(image, hotspot, "custom cursor");
-	    frame.setCursor(cursor);
 	}
 	
 	public int getWidth() {
@@ -85,6 +79,17 @@ public class Screen {
 	
 	public Mouse getMouse() {
 		return mouse;
+	}
+
+	public void setCursor(String file){
+		if (cursor.equals(file))
+			return;
+		this.cursor = file;
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Image image = toolkit.getImage(getClass().getResource("/textures/Cursors/" + file));
+		Point hotspot = new Point(0,0);
+		Cursor cursor = toolkit.createCustomCursor(image, hotspot, "custom cursor");
+		frame.setCursor(cursor);
 	}
 
 }

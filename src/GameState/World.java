@@ -36,7 +36,7 @@ public class World {
 		return world;
 	}
 	
-	public void init(String path, Camera camera) {
+	void init(String path, Camera camera) {
 		this.camera = camera;
 		this.path = path;
 		
@@ -48,26 +48,26 @@ public class World {
 		FileManager manager = new FileManager();
 
 		if (!manager.fileExists(path))
-			elements = Generator.generateWorld(100, 20, seed).split("\\s+"); // separate all file's elements
+			elements = Generator.generateWorld(200, 100, seed).split("\\s+"); // separate all file's elements
 		else {
 			elements = Security.getInstance().decrypt(manager.readFile(path)).split("\\s+"); // separate all file's elements
 		}
 		
-		width = Integer.valueOf(elements[0]); // get how many tiles will be horizontal
-		height = Integer.valueOf(elements[1]); // get how many tils will be vertical
+		width = Integer.parseInt(elements[0]); // get how many tiles will be horizontal
+		height = Integer.parseInt(elements[1]); // get how many tiles will be vertical
 
 		blocks = new int[width][height]; // initializing the array
 		health = new int[width][height];
 		for (int y = 0; y < height; y++) { // for-y-loop
 			for (int x = 0; x < width; x++) { // for-x-loop
-				blocks[x][y] = Integer.valueOf(elements[(width * y) + x + 2]); // + 2 because with and height are in the same array
+				blocks[x][y] = Integer.parseInt(elements[(width * y) + x + 2]); // + 2 because with and height are in the same array
 				health[x][y] = getTile(x,y).getHealth();
 			}
 		}
 	}
 	
 	
-	public void render(Graphics g) {
+	void render(Graphics g) {
 		g.drawImage(background , 0, 0, screen.getWidth(), screen.getHeight(), null);
 		for (int y = yStart; y < yEnd; y++) {
 			for (int x = xStart; x < xEnd; x++) {
@@ -93,7 +93,7 @@ public class World {
 		xEnd = Math.min(width, (camera.getX() + screen.getWidth()) / Tile.getWidth() + 2); // if camera is over width it will end at world's width
 		yStart = Math.max(0, camera.getY() / Tile.getHeight() - 1); // same as xStart but for height
 		yEnd = Math.min(height, (camera.getY() + screen.getHeight()) / Tile.getHeight() + 2); // same as xEnd but for height
-		
+
 		for (int y = yStart; y < yEnd; y++) {
 			for (int x = xStart; x < xEnd; x++) {
 				if (!getTile(x,y).isUnbreakable()) {
@@ -102,11 +102,21 @@ public class World {
 						blocks[x][y] = 0;
 					}
 				}
+
+				// Sand Top
+				if (getTile(x,y) == Tile.sandTop)
+					if (getTile(x,y-1).isSolid())
+						setBlock(x,y,Tile.sandBottom);
+
+				// Sand Bottom
+				if (getTile(x,y) == Tile.sandBottom)
+					if (!getTile(x,y-1).isSolid())
+						setBlock(x,y,Tile.sandTop);
 			}
 		}
 	}
-	
-	
+
+
 	public Tile getTile(int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height) // if index is out of bounds
 			return Tile.grass;
@@ -117,15 +127,8 @@ public class World {
 		
 		return tile;
 	}
-	
-	public void setTile(int x, int y, Tile tile) throws ArrayIndexOutOfBoundsException {
-		if (x < 0 || x >= width || y < 0 || y >= height) // if index is out of bounds
-			throw new ArrayIndexOutOfBoundsException();
-		else
-			blocks[x][y] = tile.getId();
-	}
-	
-	public String getWorld() {
+
+	private String getWorld() {
 		String world = width + " " + height + "\n";
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -154,6 +157,13 @@ public class World {
 		System.out.println("Saving world..");
 		manager.writeFile(path, Security.getInstance().encrypt(getWorld()));
 		System.out.println("World saved!");
+	}
+
+	public void setBlock(int x, int y, Tile tile){
+		if (x < 0 || x >= width || y < 0 || y >= height) // if index is out of bounds
+			return;
+		blocks[x][y] = tile.getId();
+		setHealth(x,y,tile.getHealth());
 	}
 	
 	public int getWidth() {

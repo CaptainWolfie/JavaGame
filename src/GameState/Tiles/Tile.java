@@ -18,7 +18,7 @@ public class Tile {
 	public static Tile air = new Tile(null, 0, -1, false);
 	public static Tile topLeftGrass = new Tile(Assets.topLeftGrass, 1, 10, true);
 	public static Tile grass = new Tile(Assets.grass, 2, 10, true);
-	public static Tile toRightGrass = new Tile(Assets.topRightGrass, 3, 10, true);
+	public static Tile topRightGrass = new Tile(Assets.topRightGrass, 3, 10, true);
 	public static Tile leftGrass = new Tile(Assets.leftGrass, 4, 10, true);
 	public static Tile rightGrass = new Tile(Assets.rightGrass, 5, 10, true);
 	public static Tile bottomLeftGrass = new Tile(Assets.bottomLeftGrass, 6, 10, true);
@@ -32,7 +32,7 @@ public class Tile {
 	private BufferedImage image;
 	private boolean isSolid;
 	private int health, id;
-	private static int WIDTH = 16, HEIGHT = 16;
+	private static int WIDTH = 12, HEIGHT = 12;
 	
 	/*
 	 * @Args image: Tile's rendered image
@@ -40,7 +40,7 @@ public class Tile {
 	 * @Args health: Tile's health (leave -1 for unbreakable)
 	 * @Args isSolid: If player can touch it
 	 */
-	public Tile(BufferedImage image, int id, int health, boolean isSolid) {
+	private Tile(BufferedImage image, int id, int health, boolean isSolid) {
 		this.image = image;
 		this.isSolid = isSolid;
 		this.health = health;
