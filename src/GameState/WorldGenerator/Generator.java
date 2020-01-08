@@ -24,7 +24,6 @@ public class Generator {
 				world1 += world[x][y] + ((x == width - 1) ? "\n" : " ");
 				System.out.println((i * 100) / (width * height) + "% - " + i + "/" + (width * height));
 			}
-
 		}
 		return world1;
 	}

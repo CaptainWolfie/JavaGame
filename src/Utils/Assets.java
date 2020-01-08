@@ -14,7 +14,7 @@ public class Assets {
 
 	// blocks
 	public static BufferedImage grass, dirt1, dirt2, dirt3, topRightGrass, topLeftGrass, rightGrass, leftGrass, bottomRightGrass,
-				bottomLeftGrass, sandTop, sandBottom, blockBreaking1, blockBreaking2, blockBreaking3, blockBreaking4;
+				bottomLeftGrass, sandTop, sandBottom, blockBreaking1, blockBreaking2, blockBreaking3, blockBreaking4, water1, water2;
 	// drops
 	public static BufferedImage woodDrop;
 	public static Map<List<BufferedImage>, List<Rectangle>> walk = new HashMap<>();
@@ -41,6 +41,9 @@ public class Assets {
 		sandTop = sheet.crop(width * 2, height * 2, width, height);
 		sandBottom = sheet.crop(width * 2, height * 3, width, height);
 		
+		water1 = sheet.crop(0, height * 5, width, height);
+		water2 = sheet.crop(width, height * 5, width, height);
+
 		// block breaking
 		sheet = new SpriteSheet(ImageLoader.loadImage("/textures/BlockBreaking.png"));
 		

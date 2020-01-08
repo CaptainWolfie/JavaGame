@@ -1,8 +1,12 @@
 package GameState.Tiles;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
+import GameState.Animations.Animation;
 import Utils.Assets;
 
 public class Tile {
@@ -11,6 +15,9 @@ public class Tile {
 	 * Tiles list
 	 */
 	public static Tile[] tiles = new Tile[256];
+	private Animation animation;
+	private List<BufferedImage> images = new ArrayList<>();
+	private List<Rectangle> dimensions = new ArrayList<>();
 	
 	/*
 	 * List of tile objects
@@ -28,6 +35,7 @@ public class Tile {
 	public static Tile dirt3 = new Tile(Assets.dirt3, 10, 10, true);
 	public static Tile sandTop = new Tile(Assets.sandTop, 11, 10, true);
 	public static Tile sandBottom = new Tile(Assets.sandBottom, 12, 10, true);
+	public static Tile water = new Tile(Assets.water1, 13, -1, false);
 
 	private BufferedImage image;
 	private boolean isSolid;
@@ -47,13 +55,46 @@ public class Tile {
 		this.id = id;
 		
 		tiles[id] = this;
+		
+		init();
+		animation = new Animation(images, dimensions, 10, 0);
+	}
+	
+	/*
+	 * Initialize the images
+	 */
+	private void init() {
+		if (id == 13) {
+			images.add(Assets.water1);
+			images.add(Assets.water2);
+			dimensions.add(new Rectangle(WIDTH, HEIGHT));
+			dimensions.add(new Rectangle(WIDTH, HEIGHT));
+		}
 	}
 	
 	/*
 	 * Render this tile only
 	 */
 	public void render(Graphics g, int x, int y) {
-		g.drawImage(image, x, y, WIDTH, HEIGHT, null);
+		if (images.size() != 0) {
+			animation.render(g, x, y, WIDTH, HEIGHT, false);
+		} else
+			g.drawImage(image, x, y, WIDTH, HEIGHT, null);
+	}
+	
+	public static void updateAll() {
+		for (int i = 0; i < tiles.length; i++) {
+			try {
+				tiles[i].update();
+			} catch (NullPointerException e) {
+				break;
+			}
+		}
+	}
+	
+	public void update() {
+		if (images.size() != 0)
+			animation.update();
 	}
 
 	public boolean isSolid() {

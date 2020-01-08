@@ -26,7 +26,7 @@ public class World {
 	
 	private BufferedImage background;
 	
-	private World(JFrame frame){
+	private World(JFrame frame) {
 		this.screen = frame;
 	}
 	
@@ -89,6 +89,7 @@ public class World {
 	}
 	
 	public void update() {
+		Tile.updateAll();
 		xStart = Math.max(0, camera.getX() / Tile.getWidth() - 1); // if camera is < 0 then it will start from 0
 		xEnd = Math.min(width, (camera.getX() + screen.getWidth()) / Tile.getWidth() + 2); // if camera is over width it will end at world's width
 		yStart = Math.max(0, camera.getY() / Tile.getHeight() - 1); // same as xStart but for height
